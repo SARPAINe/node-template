@@ -25,6 +25,12 @@ const httpServer = createServer(app);
 // using set method to mount the `io` instance on the app to avoid usage of `global`
 // app.set("io", io);
 
+//routers
+import authRouter from "./routes/auth.routes.js";
+//middleware
+import { notFound as notFoundMiddleware } from "./middlewares/notFound.js";
+import { errorHandlerMiddleware } from "./middlewares/error-handler.js";
+
 // global middlewares
 app.use(
   cors({
@@ -58,9 +64,10 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public")); // configure static file to save images locally
 app.use(cookieParser());
-app.use((req, res) => {
-  res.send("hello");
-});
+
+app.use("/api/v1/auth", authRouter);
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 // initializeSocketIO(io);
 

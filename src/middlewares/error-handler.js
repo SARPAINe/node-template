@@ -4,6 +4,7 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
     // set default
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || "Something went wrong try again later",
+    errors: err.errors || [],
   };
   if (err.name === "ValidationError") {
     customError.msg = Object.values(err.errors)
@@ -22,5 +23,7 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
     customError.statusCode = 404;
   }
 
-  return res.status(customError.statusCode).json({ msg: customError.msg });
+  return res
+    .status(customError.statusCode)
+    .json({ msg: customError.msg, errors: customError.errors });
 };
