@@ -14,10 +14,6 @@ import {
   updateUserAvatar,
   verifyEmail,
 } from "../controllers/auth.controller.js";
-// import {
-//   verifyJWT,
-//   verifyPermission,
-// } from "../../../middlewares/auth.middlewares.js";
 import {
   userAssignRoleValidator,
   userChangeCurrentPasswordValidator,
@@ -27,6 +23,7 @@ import {
   userResetForgottenPasswordValidator,
 } from "../validators/user.validator.js";
 import { validate } from "../validators/validate.js";
+import { verifyJWT } from "../middlewares/authentication.js";
 // import { upload } from "../../../middlewares/multer.middlewares.js";
 // import { mongoIdPathVariableValidator } from "../../../validators/common/mongodb.validators.js";
 
@@ -50,7 +47,7 @@ router.route("/refresh-token").post(refreshAccessToken);
 //   );
 
 // // Secured routes
-// router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/logout").post(verifyJWT, logoutUser);
 // router
 //   .route("/avatar")
 //   .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
