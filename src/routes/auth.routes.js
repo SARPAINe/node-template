@@ -3,16 +3,16 @@ import { UserRolesEnum } from "../constants.js";
 import {
   assignRole,
   changeCurrentPassword,
-  forgotPasswordRequest,
+  // forgotPasswordRequest,
   getCurrentUser,
   loginUser,
   logoutUser,
   refreshAccessToken,
   registerUser,
-  resendEmailVerification,
-  resetForgottenPassword,
-  updateUserAvatar,
-  verifyEmail,
+  // resendEmailVerification,
+  // resetForgottenPassword,
+  // updateUserAvatar,
+  // verifyEmail,
 } from "../controllers/auth.controller.js";
 import {
   userAssignRoleValidator,
@@ -23,7 +23,7 @@ import {
   userResetForgottenPasswordValidator,
 } from "../validators/user.validator.js";
 import { validate } from "../validators/validate.js";
-import { verifyJWT } from "../middlewares/authentication.js";
+import { verifyJWT, verifyPermission } from "../middlewares/authentication.js";
 // import { upload } from "../../../middlewares/multer.middlewares.js";
 // import { mongoIdPathVariableValidator } from "../../../validators/common/mongodb.validators.js";
 
@@ -51,27 +51,25 @@ router.route("/logout").post(verifyJWT, logoutUser);
 // router
 //   .route("/avatar")
 //   .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
-// router.route("/current-user").get(verifyJWT, getCurrentUser);
-// router
-//   .route("/change-password")
-//   .post(
-//     verifyJWT,
-//     userChangeCurrentPasswordValidator(),
-//     validate,
-//     changeCurrentPassword
-//   );
+router.route("/current-user").get(verifyJWT, getCurrentUser);
+router
+  .route("/change-password")
+  .post(
+    verifyJWT,
+    userChangeCurrentPasswordValidator(),
+    validate,
+    changeCurrentPassword
+  );
 // router
 //   .route("/resend-email-verification")
 //   .post(verifyJWT, resendEmailVerification);
-// router
-//   .route("/assign-role/:userId")
-//   .post(
-//     verifyJWT,
-//     verifyPermission([UserRolesEnum.ADMIN]),
-//     mongoIdPathVariableValidator("userId"),
-//     userAssignRoleValidator(),
-//     validate,
-//     assignRole
-//   );
+router.route("/assign-role/:userId").post(
+  verifyJWT,
+  verifyPermission([UserRolesEnum.ADMIN]),
+  // mongoIdPathVariableValidator("userId"),
+  userAssignRoleValidator(),
+  validate,
+  assignRole
+);
 
 export default router;
